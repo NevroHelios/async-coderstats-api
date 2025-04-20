@@ -1,0 +1,7 @@
+Directory structure:
+└── nevrohelios-automated-data-analysis/
+    ├── App.py
+    ├── prompts.py
+    ├── tools.py
+    └── .streamlit/
+        └── config.toml

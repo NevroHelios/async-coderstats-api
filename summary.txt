@@ -1,0 +1,4 @@
+Repository: nevrohelios/automated-data-analysis
+Files analyzed: 4
+
+Estimated tokens: 3.3k
