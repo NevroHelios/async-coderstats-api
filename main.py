@@ -59,7 +59,6 @@ def repo_summary(repo_url: str = Query(..., description="GitHub repository URL")
         readme_text = readme_match.group(1) or readme_match.group(2)
         readme_text = readme_text.strip() if readme_text else None
 
-    # Check for estimated tokens in summary
     token_match = re.search(r"Estimated tokens:\s*([\d\.]+)k", summary)
     estimated_tokens = None
     if token_match:
@@ -71,26 +70,19 @@ def repo_summary(repo_url: str = Query(..., description="GitHub repository URL")
     # If tokens <= 4000, extract all code blocks from content and append to README
     code_blocks = []
     if estimated_tokens is not None and estimated_tokens <= 4000:
-        # Extract all code blocks (triple backtick blocks) from content
         code_blocks = re.findall(r"```(?:[^\n]*)\n(.*?)```", content, re.DOTALL)
-        # Optionally, include file headers if needed
-        # code_blocks = re.findall(r"File:\s*(.*?)\n[-=]+\n(.*?)```", content, re.DOTALL)
-        # But for now, just the code blocks
 
-    # Try to parse README as JSON if it looks like JSON
     if readme_text:
         try:
             readme_json = json.loads(readme_text)
         except Exception:
             readme_json = None
 
-    # Embed code blocks in the README if within token limit
+    
     if code_blocks and readme_text:
         if readme_json is not None:
-            # If README is JSON, add a "code_blocks" field
             readme_json["code_blocks"] = code_blocks
         else:
-            # If README is text, append code blocks at the end
             readme_text += "\n\n---\n\n" + "\n\n".join(
                 [f"```python\n{cb}\n```" for cb in code_blocks]
             )
